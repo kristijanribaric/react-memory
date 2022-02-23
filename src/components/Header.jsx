@@ -16,7 +16,7 @@ const Header = () => {
         <h1 className='font-bold text-3xl'>Memory game</h1>
         <h2>
             Made with 
-            <Tooltip TransitionComponent={Zoom} title={<a href='https://reactjs.org/'>https://reactjs.org/</a>}>
+            <Tooltip TransitionComponent={Zoom} title={<a href='https://reactjs.org/' target="_blank">https://reactjs.org/</a>}>
             <Button>
               <FaReact className='inline-block text-indigo-400 motion-safe:animate-spin text-2xl'/>
               <span className='text-indigo-400 mx-1'>React</span>
@@ -25,7 +25,7 @@ const Header = () => {
         </h2>
         <h3>
             Made beautiful with  
-            <Tooltip TransitionComponent={Zoom} title={<a href='https://tailwindcss.com/'>https://tailwindcss.com/</a>}>
+            <Tooltip TransitionComponent={Zoom} title={<a href='https://tailwindcss.com/' target="_blank">https://tailwindcss.com/</a>}>
               <Button >
                 <SiTailwindcss className='inline-block text-indigo-400 motion-safe:animate-pulse  text-2xl'/> 
                 <span className='text-indigo-400 mx-1'>Tailwind CSS</span>
