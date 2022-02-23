@@ -4,13 +4,14 @@ import { GiCard5Spades } from "react-icons/gi";
 import { CgFormatJustify } from "react-icons/cg";
 
 const Card = () => {
-    const [style, setStyle] = useState("flip-content");
+    const [style, setStyle] = useState();
     const changeStyle = () => {
-      if(style == "flip-content")
+      if(style === true)
       {setStyle("flip-content flip-content-activated");}
       else {
         setStyle("flip-content");
       }
+      style = !style;
     };
   return (
     <>
@@ -24,6 +25,7 @@ const Card = () => {
                 </div>
             </div>
         </div>
+
     </>
   )
 }
