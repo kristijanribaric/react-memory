@@ -18,7 +18,7 @@ const Card = ({ onClick, card, index, isInactive, isFlipped, isDisabled }) => {
       onClick={handleClick}
     >
       
-      <div className="card-face card-font-face bg-red-300 shadow-md shadow-red-200">
+      <div className="card-face card-font-face bg-red-300 shadow-lg shadow-red-200">
         <CgFormatJustify className="w-full h-20"/>
       </div>
       <div className="card-face card-back-face bg-blue-300 shadow-lg shadow-blue-200">
