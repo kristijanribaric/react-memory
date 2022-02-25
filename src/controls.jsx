@@ -8,11 +8,11 @@ const Controls = ({moves, bestScore, handleRestart}) => {
           <div className="px-2">
              Moves: {moves}
           </div>
-          {localStorage.getItem("bestScore") && (
+          {/* {localStorage.getItem("bestScore") && (
             <div className="px-2" >
               Best Score: {bestScore}
             </div>
-          )}
+          )} */}
         </div>
         <div className="my-3" >
           <Button onClick={handleRestart} color="primary" variant="contained">

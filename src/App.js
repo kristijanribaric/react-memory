@@ -151,8 +151,9 @@ function App() {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description" className="text-center">
-            You completed the game in {moves} moves. <br></br> Your best score is 
-            {" " + bestScore} moves.
+            You completed the game in {moves} moves.
+             {/* Your best score is 
+            {" " + bestScore} moves. */}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
