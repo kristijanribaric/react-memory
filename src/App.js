@@ -32,7 +32,7 @@ function shuffleCards(array) {
   return array;
 }
 
-const uniqueElementsArray  = [<DiAndroid className="w-full h-20"/>,<DiApple className="w-full h-20"/>, <DiGithubBadge className="w-full h-20"/>, <DiFirefox className="w-full h-20"/>,<DiIe className="w-full h-20"/>,<DiPython className="w-full h-20"/>];
+const uniqueElementsArray  = [<DiAndroid className="w-full h-2/3"/>,<DiApple className="w-full h-2/3"/>, <DiGithubBadge className="w-full h-2/3"/>, <DiFirefox className="w-full h-2/3"/>,<DiIe className="w-full h-2/3"/>,<DiPython className="w-full h-2/3"/>];
 
 
 function App() {
@@ -123,7 +123,7 @@ function App() {
   return (
     <div className="App">
       <Header />
-      <div className="grid grid-cols-4 grid-rows-3 w-4/5 md:w-2/3 lg:w-1/3 h-[300px] m-auto my-6 gap-4">
+      <div className="grid grid-cols-4 grid-rows-3 w-4/5 md:w-2/3 lg:w-1/3 h-[520px] m-auto my-6 gap-4">
         {cards.map((card, index) => {
           return (
             <Card
