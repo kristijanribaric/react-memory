@@ -9,7 +9,7 @@ import Zoom from '@mui/material/Zoom';
 
 const Header = () => {
   return (
-    <header className='w-full bg-gray-100 py-3 text-center'>
+    <header className='w-full bg-gray-100 py-3 text-center shadow-md'>
         <h1 className='font-bold text-3xl'>Memory game</h1>
         <h2>
             Made with 
