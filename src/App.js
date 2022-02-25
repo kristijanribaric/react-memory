@@ -1,106 +1,167 @@
-import Cards from "./components/Cards";
 import Header from "./components/Header";
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  Button,
+  DialogTitle
+} from "@material-ui/core";
+import Card from "./components/card";
+import Controls from "./controls";
+import Footer from "./footer";
 import { DiAndroid } from "react-icons/di";
 import { DiApple } from "react-icons/di";
 import { DiGithubBadge } from "react-icons/di";
 import { DiFirefox } from "react-icons/di";
 import { DiIe } from "react-icons/di";
 import { DiPython } from "react-icons/di";
-import { CgFormatJustify } from "react-icons/cg";
+
+function shuffleCards(array) {
+  const length = array.length;
+  for (let i = length; i > 0; i--) {
+    const randomIndex = Math.floor(Math.random() * i);
+    const currentIndex = i - 1;
+    const temp = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temp;
+  }
+  return array;
+}
+
+const uniqueElementsArray  = [<DiAndroid className="w-full h-20"/>,<DiApple className="w-full h-20"/>, <DiGithubBadge className="w-full h-20"/>, <DiFirefox className="w-full h-20"/>,<DiIe className="w-full h-20"/>,<DiPython className="w-full h-20"/>];
 
 
 function App() {
-  const BLANK_CARD = <CgFormatJustify className="w-full h-20"/>
-  const [imagesArray, setImagesArray] = useState([])    
-  const [cardsChosen, setCardsChosen] = useState([])    
-  const [cardsChosenIds, setCardsChosenIds] = useState([])    
-  const [points, setPoints] = useState(0)
-  const [openCards, setOpenCards] = useState([])
+ 
+  const [cards, setCards] = useState(
+    shuffleCards.bind(null, uniqueElementsArray.concat(uniqueElementsArray))
+  );
+  const [openCards, setOpenCards] = useState([]);
+  const [clearedCards, setClearedCards] = useState({});
+  const [shouldDisableAllCards, setShouldDisableAllCards] = useState(false);
+  const [moves, setMoves] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+  const [bestScore, setBestScore] = useState(
+    JSON.parse(localStorage.getItem("bestScore"))
+  );
+  const timeout = useRef(null);
 
-  const imagesss = ["https://progitek.no/privat/bp/wp-content/uploads/2021/09/pexels-cottonbro-4910769.jpg","https://progitek.no/privat/bp/wp-content/uploads/2021/09/pexels-rachel-claire-5490707.jpg", "https://progitek.no/privat/bp/wp-content/uploads/2021/09/pexels-helena-lopes-2253275.jpg","https://progitek.no/privat/bp/wp-content/uploads/2021/09/pexels-kendra-coupland-2642167.jpg","https://progitek.no/privat/bp/wp-content/uploads/2021/09/pexels-funny-foxy-pride-6244506.jpg","https://progitek.no/privat/bp/wp-content/uploads/2021/09/pexels-marko-blazevic-774731.jpg"];
-  const images = [<DiAndroid className="w-full h-20"/>,<DiApple className="w-full h-20"/>, <DiGithubBadge className="w-full h-20"/>, <DiFirefox className="w-full h-20"/>,<DiIe className="w-full h-20"/>,<DiPython className="w-full h-20"/>];
+  const disable = () => {
+    setShouldDisableAllCards(true);
+  };
 
-  function createCardBoard() {
-    const imagesGenerated = images?.concat(...images)
-    console.log(imagesGenerated)
-    const shuffledArray = shuffleArray(imagesGenerated)
-    setImagesArray(shuffledArray)
-}
+  const enable = () => {
+    setShouldDisableAllCards(false);
+  };
 
-function flipImage(image, index) {
-    // CHECK IF IMAGE IS SELECTED
-    console.log(image, index)
-
-    if (cardsChosenIds?.length === 1 && cardsChosenIds[0] === index) {
-        return
+  const checkCompletion = () => {
+    if (Object.keys(clearedCards).length === uniqueElementsArray.length) {
+      setShowModal(true);
+      const highScore = Math.min(moves, bestScore);
+      setBestScore(highScore);
+      localStorage.setItem("bestScore", highScore);
     }
-
-    // Check if 
-    if (cardsChosen?.length < 2) {
-
-        setCardsChosen(cardsChosen => cardsChosen?.concat(image))
-        setCardsChosenIds(cardsChosenIds => cardsChosenIds?.concat(index))
-
-        if (cardsChosen?.length === 1) {
-            // Check if images are the same
-            if (cardsChosen[0] === image) {
-                setPoints(points => points + 2)
-                setOpenCards(openCards => openCards?.concat([cardsChosen[0], image]))
-            }
-            setTimeout(() => {
-                setCardsChosenIds([])
-                setCardsChosen([])
-            }, 700)
-            
-        } 
+  };
+  const evaluate = () => {
+    const [first, second] = openCards;
+    enable();
+    if (cards[first].type === cards[second].type) {
+      setClearedCards((prev) => ({ ...prev, [cards[first].type]: true }));
+      setOpenCards([]);
+      return;
     }
-}
-
-function isCardChosen(image, index) {
-    return cardsChosenIds?.includes(index) || openCards?.includes(image)
-}
-
-
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+    // This is to flip the cards back after 500ms duration
+    timeout.current = setTimeout(() => {
+      setOpenCards([]);
+    }, 600);
+  };
+  const handleCardClick = (index) => {
+    if (openCards.length === 1) {
+      setOpenCards((prev) => [...prev, index]);
+      setMoves((moves) => moves + 1);
+      disable();
+    } else {
+      clearTimeout(timeout.current);
+      setOpenCards([index]);
     }
-    console.log(array)
-    return array
-}
+  };
 
-function startOver() {
-    setCardsChosenIds([])
-    setCardsChosen([])
-    setPoints(0)
-    setOpenCards([])
-}
+  useEffect(() => {
+    let timeout = null;
+    if (openCards.length === 2) {
+      timeout = setTimeout(evaluate, 300);
+    }
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [openCards]);
 
-useEffect(() => {
-    createCardBoard()
-}, [])
+  useEffect(() => {
+    checkCompletion();
+  }, [clearedCards]);
+  const checkIsFlipped = (index) => {
+    return openCards.includes(index);
+  };
+
+  const checkIsInactive = (card) => {
+    return Boolean(clearedCards[card.type]);
+  };
+
+  const handleRestart = () => {
+    setClearedCards({});
+    setOpenCards([]);
+    setShowModal(false);
+    setMoves(0);
+    setShouldDisableAllCards(false);
+    setCards(shuffleCards(uniqueElementsArray.concat(uniqueElementsArray)));
+  };
+
 
   return (
-    <div>
-            <h2>MemoryGame</h2>
-            <h3>Points: {points}</h3>
-            <button onClick={startOver}>Start over</button>
-            <div className="grid grid-cols-4 gap-3">
-                {imagesArray?.map((image, index) => {
-                    return (
-                        // <div className="" key={index} onClick={() => flipImage(image, index)}>
-                        //     <img src={isCardChosen(image, index) ? image : BLANK_CARD} alt="" className={`img-fluid img-fixed`} />
-                        // </div>
-                        <div className= {isCardChosen(image,index) ? "bg-blue-200" : "bg-red-200"} key={index} onClick={() => flipImage(image, index)}>
-                          
-                          <span className="">{isCardChosen(image,index) ? image : BLANK_CARD}</span>
-                        </div>
-                    )
-                })}
-            </div>
+    <div className="App">
+      <Header />
+      <div className="grid grid-cols-4 grid-rows-3 w-4/5 md:w-2/3 lg:w-1/3 h-[300px] m-auto my-6 gap-4">
+        {cards.map((card, index) => {
+          return (
+            <Card
+              key={index}
+              card={card}
+              index={index}
+              isDisabled={shouldDisableAllCards}
+              isInactive={checkIsInactive(card)}
+              isFlipped={checkIsFlipped(index)}
+              onClick={handleCardClick}
+            />
+          );
+        })}
       </div>
+      <Controls moves={moves} bestScore={bestScore} handleRestart={handleRestart}/>
+      <Footer />
+      <Dialog
+        open={showModal}
+        disableBackdropClick
+        disableEscapeKeyDown
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title" className="animate-bounce text-center">
+          Congrats!!
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description" className="text-center">
+            You completed the game in {moves} moves. <br></br> Your best score is 
+            {" " + bestScore} moves.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleRestart} color="primary" variant="contained">
+            Restart
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
   );
 }
 
