@@ -44,7 +44,7 @@ function App() {
   const [moves, setMoves] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [bestScore, setBestScore] = useState(
-    JSON.parse(localStorage.getItem("bestScore"))
+    JSON.parse(localStorage.getItem("bestScore")) || Number.POSITIVE_INFINITY
   );
   const timeout = useRef(null);
 
