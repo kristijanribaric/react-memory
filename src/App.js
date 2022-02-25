@@ -1,4 +1,7 @@
 import Header from "./components/Header";
+import Card from "./components/card";
+import Controls from "./controls";
+import Footer from "./footer";
 import { useEffect, useState, useRef } from "react";
 import {
   Dialog,
@@ -8,9 +11,8 @@ import {
   Button,
   DialogTitle
 } from "@material-ui/core";
-import Card from "./components/card";
-import Controls from "./controls";
-import Footer from "./footer";
+
+// Icons
 import { DiAndroid } from "react-icons/di";
 import { DiApple } from "react-icons/di";
 import { DiGithubBadge } from "react-icons/di";
@@ -72,7 +74,6 @@ function App() {
       setOpenCards([]);
       return;
     }
-    // This is to flip the cards back after 500ms duration
     timeout.current = setTimeout(() => {
       setOpenCards([]);
     }, 600);
